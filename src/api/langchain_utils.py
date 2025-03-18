@@ -10,6 +10,19 @@ import chromadb
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+
+## Added by me on 19 March 2025
+from dotenv import load_dotenv
+import os 
+
+# Load .env from project root
+load_dotenv()
+# Define Pinecone API Key
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+## End of addition
+
+
 persistent_client = chromadb.PersistentClient(path="../chroma_db")
 collection = persistent_client.get_or_create_collection("budget_2024")
 embedding_function = OpenAIEmbeddings()
