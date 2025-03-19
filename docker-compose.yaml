@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -8,11 +6,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ./chroma_db:/chroma_db
       - ./src/api:/app
-      - ./.env:/app/.env  # Mount the .env file from root to the container
-    environment:
-      - UVICORN_CMD=uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-    command: ["sh", "-c", "$$UVICORN_CMD"]
+      - ./.env:/app/.env
 
   frontend:
     build:
@@ -21,6 +17,9 @@ services:
     ports:
       - "8501:8501"
     volumes:
+      - ./chroma_db:/chroma_db
       - ./src/app:/app
+      - ./.env:/app/.env  # Mount the .env file from root to the container
+
     depends_on:
       - backend
