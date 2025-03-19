@@ -14,6 +14,14 @@ def display_chat_interface():
 
         with st.spinner("Generating response..."):
             response = get_api_response(prompt, st.session_state.session_id, st.session_state.model)
+            print(f"this is the response: {response}")
+            print(f"this is the source: {response['sources']}")
+
+            sources_lst = []
+            for doc in response['sources']:
+                sources_lst.append(doc.get('metadata').get('Header 1') + doc.get('metadata').get('file_name'))
+            
+            print(f"this is the sources_lst: {sources_lst}")
             
             if response:
                 st.session_state.session_id = response.get('session_id')
@@ -29,5 +37,7 @@ def display_chat_interface():
                         st.code(response['model'])
                         st.subheader("Session ID")
                         st.code(response['session_id'])
+                        st.subheader("Sources")
+                        st.code(sources_lst)
             else:
                 st.error("Failed to get a response from the API. Please try again.")

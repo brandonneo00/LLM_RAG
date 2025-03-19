@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: src/api/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/api:/app
+      - ./.env:/app/.env  # Mount the .env file from root to the container
+    environment:
+      - UVICORN_CMD=uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: ["sh", "-c", "$$UVICORN_CMD"]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: src/app/Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./src/app:/app
+    depends_on:
+      - backend

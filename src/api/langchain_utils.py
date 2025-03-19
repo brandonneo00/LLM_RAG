@@ -18,7 +18,7 @@ import os
 # Load .env from project root
 load_dotenv()
 # Define Pinecone API Key
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 ## End of addition
 
@@ -33,7 +33,7 @@ vectorstore = Chroma(
 )
 ## End of my's addition
 
-retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+retriever = vectorstore.as_retriever(search_kwargs={"k": 4}) 
 
 output_parser = StrOutputParser()
 

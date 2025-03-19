@@ -15,6 +15,7 @@ class QueryResponse(BaseModel):
     answer: str
     session_id: str
     model: ModelName
+    sources: list 
 
 class DocumentInfo(BaseModel):
     id: int
