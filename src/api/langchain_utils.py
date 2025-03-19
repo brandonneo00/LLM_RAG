@@ -31,6 +31,7 @@ vectorstore = Chroma(
     collection_name="budget_2024",
     embedding_function=embedding_function,
 )
+print(vectorstore._collection.count(),"brandon")
 ## End of my's addition
 
 retriever = vectorstore.as_retriever(search_kwargs={"k": 4}) 

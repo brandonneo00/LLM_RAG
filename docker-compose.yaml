@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./chroma_db:/chroma_db
+      - ./src/chroma_db:/chroma_db
       - ./src/api:/app
       - ./.env:/app/.env
 
@@ -17,7 +17,7 @@ services:
     ports:
       - "8501:8501"
     volumes:
-      - ./chroma_db:/chroma_db
+      - ./src/chroma_db:/chroma_db
       - ./src/app:/app
       - ./.env:/app/.env  # Mount the .env file from root to the container
 
