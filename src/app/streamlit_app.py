@@ -11,9 +11,6 @@ if "messages" not in st.session_state:
 if "session_id" not in st.session_state:
     st.session_state.session_id = None
 
-# if "api_key" not in st.session_state:
-#     st.session_state.api_key = ""  # Default value
-
 # Display the sidebar
 display_sidebar()
 

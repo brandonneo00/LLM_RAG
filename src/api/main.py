@@ -52,8 +52,6 @@ def validate_question(question: str, model_name: str) -> tuple:
 
 @app.post("/chat", response_model=QueryResponse)
 def chat(query_input: QueryInput):
-    # os.environ['OPENAI_API_KEY'] = query_input.api_key
-    print('envkey is: ',os.environ['OPENAI_API_KEY'])
     session_id = query_input.session_id
     logging.info(f"Session ID: {session_id}, User Query: {query_input.question}, Model: {query_input.model.value}")
     if not session_id:

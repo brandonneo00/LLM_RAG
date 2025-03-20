@@ -4,14 +4,9 @@ from api_utils import update_env
 dotenv_path = ".env"
 load_dotenv(dotenv_path)
 
-# if "api_key" not in st.session_state:
-#     st.session_state.api_key = ""  # Default value
-
 def update_env_st(api_key):
     """Update the API key in the .env file."""
     if api_key:
-        # st.session_state.api_key = api_key
-        # st.sidebar.success("API key saved successfully!")
         update_env(api_key)
 
 def display_sidebar():

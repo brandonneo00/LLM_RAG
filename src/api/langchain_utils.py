@@ -49,14 +49,12 @@ def get_rag_chain(model="gpt-4o-mini"):
         collection_name="budget_2024",
         embedding_function=embedding_function,
     )
-    # print(vectorstore._collection.count(),"brandon")
         
 
     retriever = vectorstore.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.5,"k": 4}) 
     # retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 3, "lambda": 0.85}, threshold=0.8)
 
-    # load_dotenv()
-    llm = ChatOpenAI(model=model, temperature=0)
+    llm = ChatOpenAI(model=model)
     history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
     question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)   
