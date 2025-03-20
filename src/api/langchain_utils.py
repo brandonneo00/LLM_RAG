@@ -3,39 +3,15 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-# from chroma_utils import vectorstore #commented out by me 18 march 2025
-
-## Added by me 18 March 2025
 import chromadb
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
-
-
-## Added by me on 19 March 2025
 from dotenv import load_dotenv
 import os 
-
-# Load .env from project root
-load_dotenv()
-# Define Pinecone API Key
-# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-## End of addition
 
 
 persistent_client = chromadb.PersistentClient(path="../chroma_db")
 collection = persistent_client.get_or_create_collection("budget_2024")
-embedding_function = OpenAIEmbeddings()
-vectorstore = Chroma(
-    client=persistent_client,
-    collection_name="budget_2024",
-    embedding_function=embedding_function,
-)
-print(vectorstore._collection.count(),"brandon")
-## End of my's addition
-
-retriever = vectorstore.as_retriever(search_kwargs={"k": 4}) 
-
 output_parser = StrOutputParser()
 
 # Set up prompts and chains
@@ -53,19 +29,34 @@ contextualize_q_prompt = ChatPromptTemplate.from_messages([
     ("human", "{input}"),
 ])
 
-
-
 qa_prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful AI assistant. Use the following context to answer the user's question."),
+    ("system", "You are a helpful AI assistant from Singapore's Ministry of Finance." 
+                "You are helping members of the public to answer questions that they have regarding the Singapore Budget 2024." 
+                "You are here to provide information strictly about Singapore's Budget 2024. "
+                "If a user asks a question that is not related to the Singapore Budget 2024, "
+                "respond with 'I'm sorry, but I can only provide information related to Singapore's Budget 2024.'"
+                "Use the following context to only answer the user's question that's related to the Singapore Budget 2024."),
     ("system", "Context: {context}"),
     MessagesPlaceholder(variable_name="chat_history"),
     ("human", "{input}")
 ])
 
-
-
 def get_rag_chain(model="gpt-4o-mini"):
-    llm = ChatOpenAI(model=model)
+    load_dotenv()
+    embedding_function = OpenAIEmbeddings()
+    vectorstore = Chroma(
+        client=persistent_client,
+        collection_name="budget_2024",
+        embedding_function=embedding_function,
+    )
+    # print(vectorstore._collection.count(),"brandon")
+        
+
+    retriever = vectorstore.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.5,"k": 4}) 
+    # retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 3, "lambda": 0.85}, threshold=0.8)
+
+    # load_dotenv()
+    llm = ChatOpenAI(model=model, temperature=0)
     history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
     question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)   

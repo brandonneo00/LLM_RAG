@@ -21,3 +21,6 @@ class DocumentInfo(BaseModel):
     id: int
     filename: str
     upload_timestamp: datetime
+
+class APIKeyUpdateRequest(BaseModel):
+    api_key: str
