@@ -21,7 +21,7 @@ Figure 2: Architecture Diagram
 - Before retrieving and generating an answer, the system checks the user query’s validity 
 - If the query is deemed unrelated or invalid, the system returns a refusal message instead of proceeding with retrieval.
 
-### <u> Submit a list of prompts that you designed for the LLM </u>
+### <u> List of prompts designed for the LLM </u>
 - Validation Prompt: 
     - User's query is fed into an LLM whose task is just to classify if a users query is valid and appropriate
     - Instructs the LLM to repsond with only Valid (if question is acceptable) or Invalid (if the question fails any of the listed criteria)
