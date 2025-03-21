@@ -28,7 +28,7 @@ Figure 2: Architecture Diagram
     - Acts as a safeguard prompt 
 - Contextualise Question Prompt: 
     - To convert the user's question into a standalone query for the retrieval to reduce confusion
-- Q&A Prompt: 
+- System Prompt: 
     - Instructs the model to act as a Singapore MoF Assistant
     - Instructs the LLM to provide an answer if the question is about Singapores Budget 2024, using the retrieved context. Refuse to answer if it's not related to the Singapore Budget 2024
 
