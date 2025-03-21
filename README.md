@@ -1,26 +1,49 @@
-# LLM_RAG_Chatbot
+# 🚀 Developing a LLM Chatbot for Singapore's Budget 2024
 
-## Architecture Diagrams that highlight key components and the flow of information in the system 
+### <u> Architecture Diagrams that highlight key components and the flow of information in the system </u>
+![Figure 1](diagrams/diagram1.jpg)
+Figure 1: Flow of information in the RAG model
 
-### A brief explanation of the RAG implementation and its rationale 
-- input processing: when a user inputs a question (and the chat history before if any), the system first reformulates it into a standalone query using the contextualise prompt. this is essential to remove any dependencies on previous parts of the conversation
-- retrieval step: the refined query is then passed to the vectorstore retriever, based on the vector embeddings stored in the chroma database, the MMR retriever fetches the top 4 most relevant and diverse documents
-- augmented generation: the retrieved documents, along with the chat history and the standalone question (rich context) are then fed into the LLM via the QA prompt to generate a well-informed answer
-- answer: the rag chain outputs the answer, combining retrieval and generation for a more context-aware response 
+![Figure 2](diagrams/diagram2.jpg)
+Figure 2: Architecture Diagram
 
-- ^^ what is the frontend and backend? 
-- ^^ various types of db? 
+### <u> A brief explanation of the RAG implementation and its rationale </u>
+1) Vector Store & Embeddings
+- The system uses OpenAIEmbeddings to convert the extracted text documents (about Singapore’s Budget 2024) into vector embeddings. These embeddings are stored in a Chroma vector database 
+2) Retriever
+- A retriever fetches the most relevant document chunks based on the user’s query. It uses a similarity score threshold of 0.5 to filter out low-relevance documents.
+3) History-Aware Question Rewriting
+- The chain first uses a “contextualize” step (create_history_aware_retriever) to rewrite or clarify the user’s query in context. This ensures the query is self-contained, especially when a conversation has multiple turns referencing previous messages.
+4) Question-Answering Chain
+- After retrieving relevant document chunks, the retrieved context are combined with the user’s query before calling the LLM.
+- The final chain returns an answer along with the context used.
+6) Guardrails & Validation
+- Before retrieving and generating an answer, the system checks the user query’s validity 
+- If the query is deemed unrelated or invalid, the system returns a refusal message instead of proceeding with retrieval.
 
-## A list of prompts used to interact with the LLM, demonstrating the different scenarios the chatbot is expected to handle 
+### <u> Submit a list of prompts that you designed for the LLM </u>
+- Validation Prompt: 
+    - User's query is fed into an LLM whose task is just to classify if a users query is valid and appropriate
+    - Instructs the LLM to repsond with only Valid (if question is acceptable) or Invalid (if the question fails any of the listed criteria)
+    - Acts as a safeguard prompt 
+- Contextualise Question Prompt: 
+    - To convert the user's question into a standalone query for the retrieval to reduce confusion
+- Q&A Prompt: 
+    - Instructs the model to act as a Singapore MoF Assistant
+    - Instructs the LLM to provide an answer if the question is about Singapores Budget 2024, using the retrieved context. Refuse to answer if it's not related to the Singapore Budget 2024
 
+### <u> A list of prompts used to interact with the LLM, demonstrating the different scenarios the chatbot is expected to handle </u>
+- Am I eligible for the Majulah Package?
+- What are the payouts I can expect to receive in December 2024?
+- What are the payouts that I can expect to receive in December 2024 as a 25 years old?
+- What are the Key reasons for high inflation over the last two years?
 
-## Submit a list of prompts that you designed for the LLM
-- Guardrails
+### <u> How to set up and run the Chatbot application through Docker </u>
+- Clone the repo to your local directory 
+- Ensure that you have Docker installed, you can check by running `docker --version` in your terminal
+- At the directory containing the `docker-compose.yaml`, run `docker-compose up --build`in your terminal
+- Open the URL provided in the terminal, it should be `http://0.0.0.0:8501`
 
-## A comprehensive README that provides clear instructions on how to set up and run the chatbot application through docker
-- at the parent directory of the cloned repo, run `docker-compose up --build`
-- open the URL provided in the terminal 
-
-## environment variable to update the chatgpt apikey 
-
+### <u> Environment variable to update the ChatGPT API Key </u>
+- Input your ChatGPT API Key in the sidebar of the Streamlit App
 
